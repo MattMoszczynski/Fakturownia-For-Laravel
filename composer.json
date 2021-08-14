@@ -1,6 +1,13 @@
 {
     "name": "mattm/fakturownia-for-laravel",
     "description": "A Laravel package for easy integration with Fakturownia (InvoiceOcean) API.",
+    "keywords": [
+        "package",
+        "laravel",
+        "fakturownia",
+        "invoiceocean",
+        "rest"
+    ],
     "type": "library",
     "license": "MIT",
     "authors": [
