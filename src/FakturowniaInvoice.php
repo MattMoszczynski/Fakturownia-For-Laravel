@@ -3,7 +3,7 @@
 namespace MattM\FFL;
 
 use MattM\FFL\FakturowniaPosition;
-use MattM\FFL\FakturowniaInvoiceType;
+use MattM\FFL\FakturowniaInvoiceKind;
 use MattM\FFL\FakturowniaPaymentMethod;
 
 class FakturowniaInvoice
@@ -27,7 +27,7 @@ class FakturowniaInvoice
 
     public $positions = array();
 
-    public function __construct($kind = FakturowniaInvoiceType::VAT, $number = "", $language = "pl")
+    public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl")
     {
         $this->number = $number;
         $this->kind = $kind;

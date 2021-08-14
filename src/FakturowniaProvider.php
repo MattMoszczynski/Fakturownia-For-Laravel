@@ -14,7 +14,7 @@ class FakturowniaProvider extends ServiceProvider
     public function register()
     {
         $this->mergeConfigFrom(
-            __DIR__ . '/config/fakturownia.php', 'fakturownia'
+            __DIR__ . '/../config/fakturownia.php', 'fakturownia'
         );
 
         $this->app->singleton(Fakturownia::class, function() {
@@ -30,7 +30,7 @@ class FakturowniaProvider extends ServiceProvider
     public function boot()
     {
         $this->publishes([
-            __DIR__ . '/config/fakturownia.php' => config_path('fakturownia.php'),
+            __DIR__ . '/../config/fakturownia.php' => config_path('fakturownia.php'),
         ]);
     }
 }
