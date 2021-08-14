@@ -1,0 +1,27 @@
+{
+    "name": "mattm/fakturownia-for-laravel",
+    "description": "A Laravel package for easy integration with Fakturownia (InvoiceOcean) API.",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Matthew Moszczyński",
+            "email": "matthew.moszczynski96@gmail.com",
+            "homepage": "https://github.com/mattmoszczynski"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "autoload": {
+        "psr-4": {
+            "MattM\\FFL\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "MattM\\FFL\\FakturowniaProvider"
+            ]
+        }
+    }
+}
