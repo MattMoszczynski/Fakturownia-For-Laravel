@@ -2,8 +2,11 @@
 
 namespace MattM\FFL;
 
-class FakturowniaPosition
+use MattM\FFL\FakturowniaDataInterface;
+
+class FakturowniaPosition implements FakturowniaDataInterface
 {
+    private $id = null;
     public $name = "";
     public $code = "";
     public $description = "";
@@ -15,12 +18,30 @@ class FakturowniaPosition
     public $price = 0.0;
     public $isNetto = false;
 
-    function __construct($name, $quantity, $price, $isNetto = false, $vat = 23) {
+    function __construct($name, $quantity, $price, $isNetto = false, $vat = 23) 
+    {
         $this->name = $name;
         $this->quantity = $quantity;
         $this->price = $price;
         $this->isNetto = $isNetto;
         $this->vat = $vat;
+    }
+
+    public function getID()
+    {
+        return $this->id;
+    }
+
+    public static function createFromJson($json)
+    {
+        $position = new FakturowniaPosition($json['name'], $json['quantity'], $json['total_price_gross'], false, $json['tax']);        
+        $position->id = $json['id'];
+        $position->code = $json['code'];
+        $position->description = $json['description'];
+
+        $position->quantityUnit = $json['quantity_unit'];
+
+        return $position;
     }
 
     public function toArray()

@@ -2,12 +2,14 @@
 
 namespace MattM\FFL;
 
+use MattM\FFL\FakturowniaDataInterface;
 use MattM\FFL\FakturowniaPosition;
 use MattM\FFL\FakturowniaInvoiceKind;
 use MattM\FFL\FakturowniaPaymentMethod;
 
-class FakturowniaInvoice
+class FakturowniaInvoice implements FakturowniaDataInterface
 {
+    private $id = null;
     public $kind = null;
     public $number = "";
     public $description = "";
@@ -99,6 +101,74 @@ class FakturowniaInvoice
     public function addPosition(FakturowniaPosition $newPosition)
     {
         array_push($this->positions, $newPosition);
+    }
+
+    public function getID()
+    {
+        return $this->id;
+    }
+    
+    public static function createFromJson($json)
+    {
+        $invoice = new FakturowniaInvoice($json['kind'], $json['number'], $json['lang']);
+        $invoice->id = $json['id'];
+        $invoice->paymentType = $json['payment_type'];
+
+        $invoice->issueDate = $json['issue_date'];
+        $invoice->sellDate = $json['sell_date'];
+
+        if ($json['payment_to_kind'] != "other_date") {
+            $invoice->paymentDate = $json['payment_to_kind'];
+        } else {
+            $invoice->paymentDate = $json['payment_to'];
+        }
+
+        $invoice->seller = array(
+            'name' => $json['seller_name'],
+            'nip' => $json['seller_tax_no'],
+            'street' => $json['seller_street'],
+            'post_code' => $json['seller_post_code'],
+            'city' => $json['seller_city'],
+            'country' => $json['seller_country'],
+            'phone' => $json['seller_phone']
+        );
+        $invoice->buyer = array(
+            'name' => $json['buyer_name'],
+            'nip' => $json['buyer_tax_no'],
+            'street' => $json['buyer_street'],
+            'post_code' => $json['buyer_post_code'],
+            'city' => $json['buyer_city'],
+            'country' => $json['buyer_country'],
+            'phone' => $json['buyer_phone']
+        );
+
+        $invoice->isBuyerCompany = ($json['buyer_company'] > 0 ? true : false);
+        
+        if (isset($json['recipient_name']) && !empty($json['recipient_name'])) {
+            $invoice->recipient = array(
+                'name' => $json['recipient_name'],
+                'street' => $json['recipient_street'],
+                'post_code' => $json['recipient_post_code'],
+                'city' => $json['recipient_city'],
+                'country' => $json['recipient_country'],
+                'phone' => $json['recipient_phone']
+            );
+        }
+
+        if (isset($json['skonto_active']) && $json['skonto_active'] > 0) {
+            $invoice->skonto = array();
+            $invoice->skonto['discount'] = $json['skonto_discount_value'];
+            $invoice->skonto['date'] = $json['skonto_discount_date'];
+        }
+
+        $invoice->positions = array();
+
+        foreach ($json['positions'] as $jsonPosition) {
+            $position = FakturowniaPosition::createFromJson($jsonPosition);
+            $invoice->addPosition($position);
+        }
+
+        return $invoice;
     }
 
     public function toArray()
