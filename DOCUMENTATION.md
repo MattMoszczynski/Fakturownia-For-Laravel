@@ -77,18 +77,18 @@ By default the price you specify for the position is set to gross price. If you 
 
 ```php
 // This is position with gross price
-$product = new FakturowniaPosition("Product A", 1, 10.00);
+$product = new FakturowniaPosition("Product A", 1, 12.30);
 
 // This is position with net price
-$product = new FakturowniaPosition("Product B", 1, 12.30, false);
+$product = new FakturowniaPosition("Product B", 1, 10.00, true);
 
 ```
 
 Or you can set variable `$isNetto` of the position object:
 
 ```php
-$product = new FakturowniaPosition("Product ABC", 1, 12.30);
-$product->isNetto = false;
+$product = new FakturowniaPosition("Product ABC", 1, 10.00);
+$product->isNetto = true;
 ```
 
 ### Adding position to an invoice
