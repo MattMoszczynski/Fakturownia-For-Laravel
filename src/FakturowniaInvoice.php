@@ -43,7 +43,7 @@ class FakturowniaInvoice implements FakturowniaDataInterface
 
         $this->seller = array(
             'name' => "",
-            'nip' => null,
+            'tax_number' => null,
             'street' => "",
             'post_code' => "",
             'city' => "",
@@ -52,7 +52,7 @@ class FakturowniaInvoice implements FakturowniaDataInterface
         );
         $this->buyer = array(
             'name' => "",
-            'nip' => null,
+            'tax_number' => null,
             'street' => "",
             'post_code' => "",
             'city' => "",
@@ -125,7 +125,7 @@ class FakturowniaInvoice implements FakturowniaDataInterface
 
         $invoice->seller = array(
             'name' => $json['seller_name'],
-            'nip' => $json['seller_tax_no'],
+            'tax_number' => $json['seller_tax_no'],
             'street' => $json['seller_street'],
             'post_code' => $json['seller_post_code'],
             'city' => $json['seller_city'],
@@ -134,7 +134,7 @@ class FakturowniaInvoice implements FakturowniaDataInterface
         );
         $invoice->buyer = array(
             'name' => $json['buyer_name'],
-            'nip' => $json['buyer_tax_no'],
+            'tax_number' => $json['buyer_tax_no'],
             'street' => $json['buyer_street'],
             'post_code' => $json['buyer_post_code'],
             'city' => $json['buyer_city'],
@@ -181,14 +181,14 @@ class FakturowniaInvoice implements FakturowniaDataInterface
             'sell_date' => $this->sellDate,
             'lang' => $this->language,
             'seller_name' => $this->seller['name'],
-            'seller_tax_no' => $this->seller['nip'],
+            'seller_tax_no' => $this->seller['tax_number'],
             'seller_street' => $this->seller['street'],
             'seller_post_code' => $this->seller['post_code'],
             'seller_city' => $this->seller['city'],
             'seller_country' => $this->seller['country'],
             'seller_phone' => $this->seller['phone'],
             'buyer_name' => $this->buyer['name'],
-            'buyer_tax_no' => $this->buyer['nip'],
+            'buyer_tax_no' => $this->buyer['tax_number'],
             'buyer_street' => $this->buyer['street'],
             'buyer_post_code' => $this->buyer['post_code'],
             'buyer_city' => $this->buyer['city'],

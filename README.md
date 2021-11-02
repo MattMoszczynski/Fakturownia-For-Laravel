@@ -13,6 +13,7 @@ A Laravel package for easy integration with Fakturownia (InvoiceOcean) API ([fak
 - creating new invoice
 - updating an invoice
 - deleting an invoice
+- printing invoices
 - managing positions for invoice
 
 ## Installation

@@ -1,29 +1,37 @@
-# [WIP] Documentation (version 0.1)
+# Documentation (version 1.0)
 
 ## Table of Contents
 
-1. [Invoices](#invoices)
-    1. Creating simple invoice
-    2. Using the constructor
-2. [Positions](#positions)
-    1. Creating a position
-    2. Specifying price - net or gross
-    3. Adding position to an invoice
-3. [InvoiceKind](#invoicekind)
-4. [PaymentMethod](#paymentmethod)
-5. [Fakturownia](#fakturownia)
-    1. Retreiving an invoice from Fakturownia
-    2. Sending invoice to Fakturownia
-    3. Updating specific invoice in Fakturownia
-    4. Deleting target invoice from Fakturownia database
+1. [Invoices](#1)
+    1. [Creating simple invoice](#1-1)
+    2. [Using the constructor](#1-2)
+    3. [FakturowniaInvoice to array](#1-3)
+2. [Positions](#2)
+    1. [Creating a position](#2-1)
+    2. [Specifying price - net or gross](#2-2)
+    3. [Calculating net and gross price](#2-3)
+    4. [Setting tax](#2-4)
+    5. [Adding position to an invoice](#2-5)
+    6. [FakturowniaPosition to array](#2-6)
+3. [InvoiceKind](#3)
+4. [PaymentMethod](#4)
+5. [Fakturownia](#5)
+    1. [Retreiving an invoice from Fakturownia](#5-1)
+    2. [Sending invoice to Fakturownia](#5-2)
+    3. [Updating specific invoice in Fakturownia](#5-3)
+    4. [Deleting target invoice from Fakturownia database](#5-4)
+    5. [Printing invoices](#5-5)
+    6. [Creating raw print](#5-6)
 
 ---
 
-## Invoices
+## <a id="1"></a>Invoices
 
 This topic will show how to create invoices and what you can modify using helper class `FakturowniaInvoice`.
 
-### Creating simple invoice
+<br/>
+
+### <a id="1-1"></a>Creating simple invoice
 
 Here's an example for basic usage of creating a simple VAT kind invoice, specifying seller and buyer name and adding a single product into it:
 
@@ -37,7 +45,9 @@ $product = new FakturowniaPosition("Product ABC", 1, 10.00);
 $invoice->addPosition($product);
 ```
 
-### Using the constructor
+<br/>
+
+### <a id="1-2"></a>Using the constructor
 
 Normally Fakturownia API automatically generates a number for your new invoice, but if you wish to specify the number, kind of invoice and the language, you pass them as optional parameters in the invoice constructor:
 
@@ -54,13 +64,27 @@ $invoice->number = "FK 123/123/123";
 $invoice->language = "en";
 ```
 
+<br/>
+
+### <a id="1-3"></a>FakturowniaInvoice to array
+
+In order to convert object of class `FakturowniaInvoice` into an array, you have to call method `toArray()`:
+
+```php
+$invoice = new FakturowniaInvoice();
+
+$invoiceAsArray = $invoice->toArray();
+```
+
 ---
 
-## Positions
+## <a id="2"></a>Positions
 
 This section describes all functionality of `FakturowniaPosition` class, showing it's main methods for an easy management of the positions objects.
 
-### Creating a position
+<br/>
+
+### <a id="2-1"></a>Creating a position
 
 Every invoice requires minimum one position added to the invoice. You can create position using helper class called `FakturowniaPosition`. Here's an example of creating a simple product:
 
@@ -68,20 +92,22 @@ Every invoice requires minimum one position added to the invoice. You can create
 $name = "Product ABC";
 $quantity = 1;
 $price = 10.00;
+
 $product = new FakturowniaPosition($name, $quantity, $price);
 ```
 
-### Specifying price - net or gross
+<br/>
+
+### <a id="2-2"></a>Specifying price - net or gross
 
 By default the price you specify for the position is set to gross price. If you wish to specify net price then you can use one of optional parameters of `FakturowniaPosition` constructor:
 
 ```php
-// This is position with gross price
+// Creating a new position set with gross price
 $product = new FakturowniaPosition("Product A", 1, 12.30);
 
-// This is position with net price
+// Creating a new position set with net price
 $product = new FakturowniaPosition("Product B", 1, 10.00, true);
-
 ```
 
 Or you can set variable `$isNetto` of the position object:
@@ -91,7 +117,46 @@ $product = new FakturowniaPosition("Product ABC", 1, 10.00);
 $product->isNetto = true;
 ```
 
-### Adding position to an invoice
+<br/>
+
+### <a id="2-3"></a>Calculating net and gross price
+
+If you wish to convert in position object the net price to gross price and vice versa you can do that by using dedicated functions `getNetPrice()` and `getGrossPrice()`:
+
+```php
+// Creating a product with specified net price
+$product = new FakturowniaPosition("Product A", 1, 10.00, true);
+
+echo $product->getNetPrice() . '<br>'; // 10.00
+echo $product->getGrossPrice() . '<br>'; // 12.30 - due to default tax of 23%
+```
+
+Notice that both of the functions only return specified prices - the `$price` variable inside of the object won't be changed!
+
+<br/>
+
+### <a id="2-4"></a>Setting tax
+
+In order to set up or change tax percent you can do that by using one of `FakturowniaPosition` constructor optional parameters:
+
+```php
+// By default tax value is set to 23%
+$product = new FakturowniaPosition("Product B", 1, 10.00, true);
+
+// You can change tax value by specifying one of last parameters - remember to give the amount from range 1 - 100!
+$anotherProduct = new FakturowniaPosition("Product B", 1, 10.00, true, 18);
+```
+
+You can also do that by using the `$tax` variable:
+
+```php
+$product = new FakturowniaPosition("Product A", 1, 12.00, true);
+$product->tax = 18;
+```
+
+<br/>
+
+### <a id="2-5"></a>Adding position to an invoice
 
 To add position object to the invoice object you can use command `addPosition()` on your invoice object:
 
@@ -102,9 +167,21 @@ $product = new FakturowniaPosition("Product ABC", 1, 10.00);
 $invoice->addPosition($product);
 ```
 
+<br/>
+
+### <a id="2-6"></a>FakturowniaPosition to array
+
+In order to convert object of class `FakturowniaPosition` into an array, you have to call method `toArray()`:
+
+```php
+$product = new FakturowniaPosition("Product ABC", 1, 10.00);
+
+$positionAsArray = $product->toArray();
+```
+
 ---
 
-## InvoiceKind
+## <a id="3"></a>InvoiceKind
 
 There's a `FakturowniaInvoiceKind` that contains constants for choosing one of existing kind of invoice for Fakturownia service.
 
@@ -115,7 +192,7 @@ $invoice->kind = FakturowniaInvoiceKind::PROFORMA;
 
 ---
 
-## PaymentMethod
+## <a id="4"></a>PaymentMethod
 
 Class `FakturowniaPaymentMethod` has constants for choosing one of existing and acceptable payment methods for the Fakturownia invoices.
 
@@ -126,13 +203,15 @@ $invoice->paymentType = FakturowniaPaymentMethod::CASH;
 
 ---
 
-## Fakturownia
+## <a id="5"></a>Fakturownia
 
 `Fakturownia` is a main helper class used to communicate with Fakturownia API servive. This class has been initialized in project using *singleton* command in Laravel.
 
-### Retreiving an invoice from Fakturownia
+<br/>
 
-To simply retrieve an existing invoice from Fakturownia service you can use static command `getInvoice` specifying an ID of the invoice as a first parameter of the function - see an example below:
+### <a id="5-1"></a>Retreiving an invoice from Fakturownia
+
+To simply retrieve an existing invoice from Fakturownia service you can use static command `getInvoice()` specifying an ID of the invoice as a first parameter of the function - see an example below:
 
 ```php
 $response = Fakturownia::getInvoice(123456789);
@@ -140,19 +219,25 @@ $response = Fakturownia::getInvoice(123456789);
 var_dump($response);
 ```
 
-### Sending invoice to Fakturownia
+<br/>
 
-To create the invoice in Fakturownia service you need to call static function `createInvoice` using `Fakturownia` static helper class (remember to have at one position in your invoice object!):
+### <a id="5-2"></a>Sending invoice to Fakturownia
+
+To create the invoice in Fakturownia service you need to call static function `createInvoice()` using `Fakturownia` static helper class (remember to have at least one position in your invoice object!):
 
 ```php
 $invoice = new FakturowniaInvoice();
 
-...
+// Filling up $invoice with data and positions...
 
 Fakturownia::createInvoice($invoice);
 ```
 
-### Updating specific invoice in Fakturownia
+<br/>
+
+### <a id="5-3"></a>Updating specific invoice in Fakturownia
+
+You can update an existing invoice in Fakturownia(InvoiceOcean) system by providing an ID and an array of elements that you would like to update, as parameters into a static function `updateInvoice()` of `Fakturownia` static helper class:
 
 ```php
 Fakturownia::updateInvoice(1234566789, array(
@@ -162,10 +247,36 @@ Fakturownia::updateInvoice(1234566789, array(
 ));
 ```
 
-### Deleting target invoice from Fakturownia database
+<br/>
+
+### <a id="5-4"></a>Deleting target invoice from Fakturownia database
+
+To simply delete an invoice from your system use `deleteInvoice()` static function of `Fakturownia` helper class. Remember to pass an ID of the invoice as a parameter of the function! Have a look at example shown below:
 
 ```php
 Fakturownia::deleteInvoice(1234566789);
+```
+
+<br/>
+
+### <a id="5-5"></a>Printing invoices in PDF format
+
+To download a print of your invoice in a PDF format you can use a static method from `Fakturownia` helper called `printInvoice()`. This function requires to provide two elements as it's arguments - the invoice ID and name of the printed PDF file:
+
+```php
+return Fakturownia::printInvoice(123456789, "Print name");
+```
+
+This method returns a Laravel response object in a form of `streamDownload()` method.
+
+<br/>
+
+### <a id="5-6"></a>Creating raw print
+
+You're also able to get the raw data for the print by calling static function `printInvoiceRaw()` from `Fakturownia` helper class. Just remember to specify the invoice ID as a first parameter of the function:
+
+```php
+$rawData = Fakturownia::printInvoiceRaw(123456789);
 ```
 
 ---
