@@ -29,6 +29,11 @@
 
 This topic will show how to create invoices and what you can modify using helper class `FakturowniaInvoice`.
 
+Namespace:
+```php
+use MattM\FFL\FakturowniaInvoice
+```
+
 <br/>
 
 ### <a id="1-1"></a>Creating simple invoice
@@ -81,6 +86,11 @@ $invoiceAsArray = $invoice->toArray();
 ## <a id="2"></a>Positions
 
 This section describes all functionality of `FakturowniaPosition` class, showing it's main methods for an easy management of the positions objects.
+
+Namespace:
+```php
+use MattM\FFL\FakturowniaPosition
+```
 
 <br/>
 
@@ -186,6 +196,8 @@ $positionAsArray = $product->toArray();
 There's a `FakturowniaInvoiceKind` that contains constants for choosing one of existing kind of invoice for Fakturownia service.
 
 ```php
+use MattM\FFL\FakturowniaInvoiceKind
+
 // Set the invoice kind to proforma
 $invoice->kind = FakturowniaInvoiceKind::PROFORMA;
 ```
@@ -197,6 +209,8 @@ $invoice->kind = FakturowniaInvoiceKind::PROFORMA;
 Class `FakturowniaPaymentMethod` has constants for choosing one of existing and acceptable payment methods for the Fakturownia invoices.
 
 ```php
+use MattM\FFL\FakturowniaPaymentMethod
+
 // Set the payment method to cash option
 $invoice->paymentType = FakturowniaPaymentMethod::CASH;
 ```
@@ -206,6 +220,12 @@ $invoice->paymentType = FakturowniaPaymentMethod::CASH;
 ## <a id="5"></a>Fakturownia
 
 `Fakturownia` is a main helper class used to communicate with Fakturownia API servive. This class has been initialized in project using *singleton* command in Laravel.
+
+Namespace:
+
+```php
+use MattM\FFL\Fakturownia
+```
 
 <br/>
 
