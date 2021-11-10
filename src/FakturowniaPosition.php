@@ -2,9 +2,9 @@
 
 namespace MattM\FFL;
 
-use MattM\FFL\FakturowniaDataInterface;
+use MattM\FFL\FakturowniaDataObject;
 
-class FakturowniaPosition implements FakturowniaDataInterface
+class FakturowniaPosition extends FakturowniaDataObject
 {
     private $id = null;
     public $name = "";
@@ -54,7 +54,7 @@ class FakturowniaPosition implements FakturowniaDataInterface
         return $position;
     }
 
-    public function toArray()
+    public function toArray($includeEmptyFields = true)
     {
         $data = array(
             'name' => $this->name,
@@ -69,6 +69,10 @@ class FakturowniaPosition implements FakturowniaDataInterface
         }
 
         $data['total_price_gross'] = $this->getGrossPrice();
+
+        if ($includeEmptyFields === false) {
+            $data = $this->removeEmptyFields($data);
+        }
 
         return $data;
     }

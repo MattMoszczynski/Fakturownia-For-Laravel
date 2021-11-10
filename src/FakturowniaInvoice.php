@@ -2,16 +2,17 @@
 
 namespace MattM\FFL;
 
-use MattM\FFL\FakturowniaDataInterface;
+use MattM\FFL\FakturowniaDataObject;
 use MattM\FFL\FakturowniaPosition;
 use MattM\FFL\FakturowniaInvoiceKind;
 use MattM\FFL\FakturowniaPaymentMethod;
 
-class FakturowniaInvoice implements FakturowniaDataInterface
+class FakturowniaInvoice extends FakturowniaDataObject
 {
     private $id = null;
     public $kind = null;
     public $number = "";
+    public $departmentID = null;
     public $description = "";
     public $paymentType = "";
     public $language = "";
@@ -107,12 +108,13 @@ class FakturowniaInvoice implements FakturowniaDataInterface
     {
         return $this->id;
     }
-    
+
     public static function createFromJson($json)
     {
         $invoice = new FakturowniaInvoice($json['kind'], $json['number'], $json['lang']);
         $invoice->id = $json['id'];
         $invoice->paymentType = $json['payment_type'];
+        $invoice->departmentID = $json['department_id'];
 
         $invoice->issueDate = $json['issue_date'];
         $invoice->sellDate = $json['sell_date'];
@@ -143,7 +145,7 @@ class FakturowniaInvoice implements FakturowniaDataInterface
         );
 
         $invoice->isBuyerCompany = ($json['buyer_company'] > 0 ? true : false);
-        
+
         if (isset($json['recipient_name']) && !empty($json['recipient_name'])) {
             $invoice->recipient = array(
                 'name' => $json['recipient_name'],
@@ -171,11 +173,12 @@ class FakturowniaInvoice implements FakturowniaDataInterface
         return $invoice;
     }
 
-    public function toArray()
+    public function toArray($includeEmptyFields = true)
     {
         $data = array(
             'kind' => $this->kind,
             'number' => $this->number,
+            'department_id' => $this->departmentID,
             'description' => $this->description,
             'issue_date' => $this->issueDate,
             'sell_date' => $this->sellDate,
@@ -229,6 +232,10 @@ class FakturowniaInvoice implements FakturowniaDataInterface
 
         foreach ($this->positions as $fakturowniaPosition) {
             array_push($data['positions'], $fakturowniaPosition->toArray());
+        }
+
+        if ($includeEmptyFields === false) {
+            $data = $this->removeEmptyFields($data);
         }
 
         return $data;
