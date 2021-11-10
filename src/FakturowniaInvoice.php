@@ -12,6 +12,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
     private $id = null;
     public $kind = null;
     public $number = "";
+    public $pattern = null;
     public $departmentID = null;
     public $description = "";
     public $paymentType = "";
@@ -114,6 +115,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
         $invoice = new FakturowniaInvoice($json['kind'], $json['number'], $json['lang']);
         $invoice->id = $json['id'];
         $invoice->paymentType = $json['payment_type'];
+        $invoice->pattern = $json['pattern'];
         $invoice->departmentID = $json['department_id'];
 
         $invoice->issueDate = $json['issue_date'];
@@ -178,6 +180,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
         $data = array(
             'kind' => $this->kind,
             'number' => $this->number,
+            'pattern' => $this->pattern,
             'department_id' => $this->departmentID,
             'description' => $this->description,
             'issue_date' => $this->issueDate,
