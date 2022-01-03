@@ -4,8 +4,8 @@ namespace MattM\FFL;
 
 use MattM\FFL\FakturowniaDataObject;
 use MattM\FFL\FakturowniaPosition;
-use MattM\FFL\FakturowniaInvoiceKind;
-use MattM\FFL\FakturowniaPaymentMethod;
+use MattM\FFL\Helpers\FakturowniaInvoiceKind;
+use MattM\FFL\Helpers\FakturowniaPaymentMethod;
 
 class FakturowniaInvoice extends FakturowniaDataObject
 {

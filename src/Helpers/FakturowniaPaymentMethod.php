@@ -1,6 +1,6 @@
 <?php
 
-namespace MattM\FFL;
+namespace MattM\FFL\Helpers;
 
 class FakturowniaPaymentMethod
 {

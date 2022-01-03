@@ -4,7 +4,7 @@ namespace MattM\FFL;
 
 use Illuminate\Support\Facades\Http;
 use MattM\FFL\FakturowniaInvoice;
-use MattM\FFL\FakturowniaPosition;
+use MattM\FFL\Helpers\FakturowniaInvoiceStatus;
 
 class Fakturownia
 {
@@ -34,6 +34,11 @@ class Fakturownia
     public static function getInvoice(int $id, string $format = 'json')
     {
         return Http::get(self::buildUrl() . "invoices/" . $id . "." . $format . "?api_token=" . self::$token);
+    }
+
+    public static function changeInvoiceStatus(int $id, string $status)
+    {
+        return Http::post(self::buildUrl() . "invoices/" . $id . ".json?api_token=" . self::$token . "&status=" . $status);
     }
 
     public static function printInvoiceRaw(int $id)
