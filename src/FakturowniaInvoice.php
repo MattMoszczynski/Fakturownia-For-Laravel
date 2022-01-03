@@ -10,6 +10,7 @@ use MattM\FFL\Helpers\FakturowniaPaymentMethod;
 class FakturowniaInvoice extends FakturowniaDataObject
 {
     private ?int $id = null;
+    public ?string $status = null;
     public string $kind = "";
     public string $number = "";
     public ?string $pattern = null;
@@ -118,6 +119,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
         $invoice->paymentType = $json['payment_type'];
         $invoice->pattern = $json['pattern'];
         $invoice->departmentID = $json['department_id'];
+        $invoice->status = $json['status'];
 
         $invoice->issueDate = $json['issue_date'];
         $invoice->sellDate = $json['sell_date'];
@@ -188,6 +190,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
             'pattern' => $this->pattern,
             'department_id' => $this->departmentID,
             'description' => $this->description,
+            'status' => $this->status,
             'issue_date' => $this->issueDate,
             'sell_date' => $this->sellDate,
             'lang' => $this->language,
