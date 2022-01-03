@@ -31,6 +31,8 @@ class FakturowniaInvoice extends FakturowniaDataObject
 
     public array $positions = array();
 
+    public float $pricePaid = 0.0;
+
     public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl")
     {
         $this->number = $number;
@@ -171,6 +173,10 @@ class FakturowniaInvoice extends FakturowniaDataObject
             $invoice->addPosition($position);
         }
 
+        $invoice->pricePaid = $json['paid'];
+
+        // ----------[ DATA PROCESSING END ]----------
+
         return $invoice;
     }
 
@@ -235,6 +241,10 @@ class FakturowniaInvoice extends FakturowniaDataObject
         foreach ($this->positions as $fakturowniaPosition) {
             array_push($data['positions'], $fakturowniaPosition->toArray());
         }
+
+        $data['paid'] = $this->pricePaid;
+
+        // ----------[ DATA PROCESSING END ]----------
 
         if ($includeEmptyFields === false) {
             $data = $this->removeEmptyFields($data);

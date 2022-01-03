@@ -51,6 +51,8 @@ class FakturowniaPosition extends FakturowniaDataObject
 
         $position->quantityUnit = $json['quantity_unit'];
 
+        // ----------[ DATA PROCESSING END ]----------
+
         return $position;
     }
 
@@ -69,6 +71,8 @@ class FakturowniaPosition extends FakturowniaDataObject
         }
 
         $data['total_price_gross'] = $this->getGrossPrice();
+
+        // ----------[ DATA PROCESSING END ]----------
 
         if ($includeEmptyFields === false) {
             $data = $this->removeEmptyFields($data);
