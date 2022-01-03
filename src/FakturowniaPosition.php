@@ -6,17 +6,17 @@ use MattM\FFL\FakturowniaDataObject;
 
 class FakturowniaPosition extends FakturowniaDataObject
 {
-    private $id = null;
-    public $name = "";
-    public $code = "";
-    public $description = "";
+    private ?int $id = null;
+    public string $name = "";
+    public string $code = "";
+    public string $description = "";
 
-    public $quantity = 0;
-    public $quantityUnit = null;
+    public int $quantity = 0;
+    public ?string $quantityUnit = null;
 
-    public $tax = 0;
-    public $price = 0.0;
-    public $isNetto = false;
+    public int $tax = 0;
+    public float $price = 0.0;
+    public bool $isNetto = false;
 
     function __construct($name, $quantity, $price, $isNetto = false, $tax = 23)
     {

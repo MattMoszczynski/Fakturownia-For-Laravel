@@ -4,7 +4,6 @@ namespace MattM\FFL;
 
 use Illuminate\Support\Facades\Http;
 use MattM\FFL\FakturowniaInvoice;
-use MattM\FFL\Helpers\FakturowniaInvoiceStatus;
 
 class Fakturownia
 {

@@ -9,27 +9,27 @@ use MattM\FFL\Helpers\FakturowniaPaymentMethod;
 
 class FakturowniaInvoice extends FakturowniaDataObject
 {
-    private $id = null;
-    public $kind = null;
-    public $number = "";
-    public $pattern = null;
-    public $departmentID = null;
-    public $description = "";
-    public $paymentType = "";
-    public $language = "";
+    private ?int $id = null;
+    public string $kind = "";
+    public string $number = "";
+    public ?string $pattern = null;
+    public ?int $departmentID = null;
+    public string $description = "";
+    public string $paymentType = "";
+    public string $language = "";
 
-    public $issueDate = null;
-    public $sellDate = null;
-    public $paymentDate = null;
+    public ?string $issueDate = null;
+    public ?string $sellDate = null;
+    public ?string $paymentDate = null;
 
-    public $seller = array();
-    public $buyer = array();
-    public $recipient = array();
-    public $isBuyerCompany = true;
+    public array $seller = array();
+    public array $buyer = array();
+    public ?array $recipient = null;
+    public bool $isBuyerCompany = true;
 
-    public $skonto = null;
+    public ?array $skonto = null;
 
-    public $positions = array();
+    public array $positions = array();
 
     public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl")
     {
@@ -62,7 +62,6 @@ class FakturowniaInvoice extends FakturowniaDataObject
             'phone' => ""
         );
         $this->recipient = null;
-        $this->isBuyerCompany = true;
 
         $this->positions = array();
     }
@@ -79,7 +78,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
 
     public function setSkonto(int $discount, int $days)
     {
-        $when = mktime(0, 0, 0, date("m")  , date("d") + $days, date("Y"));
+        $when = mktime(0, 0, 0, date("m"), date("d") + $days, date("Y"));
 
         $this->skonto = array(
             'discount' => $discount,
