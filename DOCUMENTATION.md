@@ -1,27 +1,33 @@
-# Documentation (version 1.0)
+# Documentation (version 1.2)
 
 ## Table of Contents
 
 1. [Invoices](#1)
     1. [Creating simple invoice](#1-1)
     2. [Using the constructor](#1-2)
-    3. [FakturowniaInvoice to array](#1-3)
+    3. [Additional functions](#1-3)
+        1. [FakturowniaInvoice to array](#1-3-1)
+        2. [Create FakturowniaInvoice from JSON structure](#1-3-2)
 2. [Positions](#2)
     1. [Creating a position](#2-1)
     2. [Specifying price - net or gross](#2-2)
     3. [Calculating net and gross price](#2-3)
     4. [Setting tax](#2-4)
     5. [Adding position to an invoice](#2-5)
-    6. [FakturowniaPosition to array](#2-6)
-3. [InvoiceKind](#3)
-4. [PaymentMethod](#4)
-5. [Fakturownia](#5)
-    1. [Retreiving an invoice from Fakturownia](#5-1)
-    2. [Sending invoice to Fakturownia](#5-2)
-    3. [Updating specific invoice in Fakturownia](#5-3)
-    4. [Deleting target invoice from Fakturownia database](#5-4)
-    5. [Printing invoices](#5-5)
-    6. [Creating raw print](#5-6)
+    6. [Additional functions](#2-6)
+        1. [FakturowniaPosition to array](#2-6-1)
+        2. [Create FakturowniaPosition from JSON structure](#2-6-2)
+3. [Invoice status](#3)
+3. [Invoice kind](#4)
+4. [Payment method](#5)
+5. [Fakturownia](#6)
+    1. [Retreiving an invoice from Fakturownia](#6-1)
+    2. [Sending invoice to Fakturownia](#6-2)
+    3. [Updating specific invoice in Fakturownia](#6-3)
+    4. [Changing invoice status in Fakturownia](#6-4)
+    5. [Deleting target invoice from Fakturownia database](#6-5)
+    6. [Printing invoices](#6-6)
+    7. [Creating raw print](#6-7)
 
 ---
 
@@ -31,7 +37,7 @@ This topic will show how to create invoices and what you can modify using helper
 
 Namespace:
 ```php
-use MattM\FFL\FakturowniaInvoice
+use MattM\FFL\FakturowniaInvoice;
 ```
 
 <br/>
@@ -71,7 +77,9 @@ $invoice->language = "en";
 
 <br/>
 
-### <a id="1-3"></a>FakturowniaInvoice to array
+### <a id="1-3"></a>Additional functions
+
+#### <a id="1-3-1"></a>FakturowniaInvoice to array
 
 In order to convert object of class `FakturowniaInvoice` into an array, you have to call method `toArray()`:
 
@@ -79,6 +87,18 @@ In order to convert object of class `FakturowniaInvoice` into an array, you have
 $invoice = new FakturowniaInvoice();
 
 $invoiceAsArray = $invoice->toArray();
+```
+
+<br/>
+
+#### <a id="1-3-2"></a>Create FakturowniaInvoice from JSON structure
+
+You can create instance of `FakturowniaInvoice` class by using it's static function `createFromJson()` like showed in example below:
+
+```php
+$json = Fakturownia::getInvoice(1234567890);
+
+$invoice = FakturowniaInvoice::createFromJson($json);
 ```
 
 ---
@@ -89,7 +109,7 @@ This section describes all functionality of `FakturowniaPosition` class, showing
 
 Namespace:
 ```php
-use MattM\FFL\FakturowniaPosition
+use MattM\FFL\FakturowniaPosition;
 ```
 
 <br/>
@@ -179,7 +199,33 @@ $invoice->addPosition($product);
 
 <br/>
 
-### <a id="2-6"></a>FakturowniaPosition to array
+### <a id="2-6"></a>Additional functions
+
+#### <a id="2-6-1"></a>FakturowniaPosition to array
+
+In order to convert object of class `FakturowniaPosition` into an array, you have to call method `toArray()`:
+
+```php
+$product = new FakturowniaPosition("Product ABC", 1, 10.00);
+
+$positionAsArray = $product->toArray();
+```
+
+<br/>
+
+#### <a id="2-6-2"></a>Create FakturowniaPosition from JSON structure
+
+You can create instance of `FakturowniaPosition` class by using it's static function `createFromJson()` like showed in example below:
+
+```php
+$json = Fakturownia::getInvoice(1234567890);
+
+$position = FakturowniaPosition::createFromJson($json['positions'][0]);
+```
+
+---
+
+#### <a id="2-6-2"></a>FakturowniaPosition to array
 
 In order to convert object of class `FakturowniaPosition` into an array, you have to call method `toArray()`:
 
@@ -191,12 +237,25 @@ $positionAsArray = $product->toArray();
 
 ---
 
-## <a id="3"></a>InvoiceKind
+## <a id="3"></a>Invoice status
+
+`FakturowniaInvoiceStatus` is a static helper class that contains constants for changing invoices status:
+
+```php
+use MattM\FFL\Helpers\FakturowniaInvoiceStatus;
+
+// Change specific invoice status to rejected
+Fakturownia::changeInvoiceStatus(1234567890, FakturowniaInvoiceStatus::REJECTED);
+```
+
+---
+
+## <a id="4"></a>Invoice kind
 
 There's a `FakturowniaInvoiceKind` that contains constants for choosing one of existing kind of invoice for Fakturownia service.
 
 ```php
-use MattM\FFL\FakturowniaInvoiceKind
+use MattM\FFL\Helpers\FakturowniaInvoiceKind;
 
 // Set the invoice kind to proforma
 $invoice->kind = FakturowniaInvoiceKind::PROFORMA;
@@ -204,12 +263,12 @@ $invoice->kind = FakturowniaInvoiceKind::PROFORMA;
 
 ---
 
-## <a id="4"></a>PaymentMethod
+## <a id="5"></a>Payment method
 
 Class `FakturowniaPaymentMethod` has constants for choosing one of existing and acceptable payment methods for the Fakturownia invoices.
 
 ```php
-use MattM\FFL\FakturowniaPaymentMethod
+use MattM\FFL\Helpers\FakturowniaPaymentMethod;
 
 // Set the payment method to cash option
 $invoice->paymentType = FakturowniaPaymentMethod::CASH;
@@ -217,19 +276,19 @@ $invoice->paymentType = FakturowniaPaymentMethod::CASH;
 
 ---
 
-## <a id="5"></a>Fakturownia
+## <a id="6"></a>Fakturownia
 
 `Fakturownia` is a main helper class used to communicate with Fakturownia API servive. This class has been initialized in project using *singleton* command in Laravel.
 
 Namespace:
 
 ```php
-use MattM\FFL\Fakturownia
+use MattM\FFL\Fakturownia;
 ```
 
 <br/>
 
-### <a id="5-1"></a>Retreiving an invoice from Fakturownia
+### <a id="6-1"></a>Retreiving an invoice from Fakturownia
 
 To simply retrieve an existing invoice from Fakturownia service you can use static command `getInvoice()` specifying an ID of the invoice as a first parameter of the function - see an example below:
 
@@ -241,7 +300,7 @@ var_dump($response);
 
 <br/>
 
-### <a id="5-2"></a>Sending invoice to Fakturownia
+### <a id="6-2"></a>Sending invoice to Fakturownia
 
 To create the invoice in Fakturownia service you need to call static function `createInvoice()` using `Fakturownia` static helper class (remember to have at least one position in your invoice object!):
 
@@ -255,7 +314,7 @@ Fakturownia::createInvoice($invoice);
 
 <br/>
 
-### <a id="5-3"></a>Updating specific invoice in Fakturownia
+### <a id="6-3"></a>Updating specific invoice in Fakturownia
 
 You can update an existing invoice in Fakturownia(InvoiceOcean) system by providing an ID and an array of elements that you would like to update, as parameters into a static function `updateInvoice()` of `Fakturownia` static helper class:
 
@@ -269,7 +328,23 @@ Fakturownia::updateInvoice(1234566789, array(
 
 <br/>
 
-### <a id="5-4"></a>Deleting target invoice from Fakturownia database
+### <a id="6-4"></a>Changing invoice status in Fakturownia
+
+Use `Fakturownia` helper class to change status of specific invoice by using static function `changeInvoiceStatus()`. You will have to provide of of the invoice and name of the status you want to set. We recommend using helper class `FakturowniaInvoiceStatus` to see available options for invoice status. An example below shows how to chance status of the invoice :
+
+```php
+use MattM\FFL\Helpers\FakturowniaInvoiceStatus;
+
+// Changing invoice status to issued
+Fakturownia::changeInvoiceStatus(1234567890, "issued");
+
+// Changing invoice status to paid with helper class
+Fakturownia::changeInvoiceStatus(1234567890, FakturowniaInvoiceStatus::PAID);
+```
+
+<br/>
+
+### <a id="6-5"></a>Deleting target invoice from Fakturownia database
 
 To simply delete an invoice from your system use `deleteInvoice()` static function of `Fakturownia` helper class. Remember to pass an ID of the invoice as a parameter of the function! Have a look at example shown below:
 
@@ -279,7 +354,7 @@ Fakturownia::deleteInvoice(1234566789);
 
 <br/>
 
-### <a id="5-5"></a>Printing invoices in PDF format
+### <a id="6-6"></a>Printing invoices in PDF format
 
 To download a print of your invoice in a PDF format you can use a static method from `Fakturownia` helper called `printInvoice()`. This function requires to provide two elements as it's arguments - the invoice ID and name of the printed PDF file:
 
@@ -291,7 +366,7 @@ This method returns a Laravel response object in a form of `streamDownload()` me
 
 <br/>
 
-### <a id="5-6"></a>Creating raw print
+### <a id="6-7"></a>Creating raw print
 
 You're also able to get the raw data for the print by calling static function `printInvoiceRaw()` from `Fakturownia` helper class. Just remember to specify the invoice ID as a first parameter of the function:
 
