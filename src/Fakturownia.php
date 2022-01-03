@@ -38,7 +38,7 @@ class Fakturownia
 
     public static function changeInvoiceStatus(int $id, string $status)
     {
-        return Http::post(self::buildUrl() . "invoices/" . $id . ".json?api_token=" . self::$token . "&status=" . $status);
+        return Http::post(self::buildUrl() . "invoices/" . $id . "/change_status.json?api_token=" . self::$token . "&status=" . $status);
     }
 
     public static function printInvoiceRaw(int $id)
