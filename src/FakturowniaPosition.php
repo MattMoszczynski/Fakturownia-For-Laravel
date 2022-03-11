@@ -46,9 +46,12 @@ class FakturowniaPosition extends FakturowniaDataObject
     {
         $position = new FakturowniaPosition($json['name'], $json['quantity'], $json['total_price_gross'], false, $json['tax']);
         $position->id = $json['id'];
-        $position->code = $json['code'];
-        $position->description = $json['description'];
 
+        if (isset($json['code']) && !empty($json['code'])) {
+            $position->code = $json['code'];
+        }
+
+        $position->description = $json['description'];
         $position->quantityUnit = $json['quantity_unit'];
 
         // ----------[ DATA PROCESSING END ]----------

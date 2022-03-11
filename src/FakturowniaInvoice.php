@@ -56,6 +56,8 @@ class FakturowniaInvoice extends FakturowniaDataObject
             'phone' => ""
         );
         $this->buyer = array(
+            'first_name' => "",
+            'last_name' => "",
             'name' => "",
             'tax_number' => null,
             'street' => "",
@@ -150,6 +152,10 @@ class FakturowniaInvoice extends FakturowniaDataObject
         );
 
         $invoice->isBuyerCompany = ($json['buyer_company'] > 0 ? true : false);
+        if(!$invoice->isBuyerCompany) {
+            $invoice->buyer['first_name'] = $json['buyer_first_name'];
+            $invoice->buyer['last_name'] = $json['buyer_last_name'];
+        }
 
         if (isset($json['recipient_name']) && !empty($json['recipient_name'])) {
             $invoice->recipient = array(
@@ -202,6 +208,8 @@ class FakturowniaInvoice extends FakturowniaDataObject
             'seller_country' => $this->seller['country'],
             'seller_phone' => $this->seller['phone'],
             'buyer_name' => $this->buyer['name'],
+            'buyer_first_name' => $this->buyer['first_name'],
+            'buyer_last_name' => $this->buyer['last_name'],
             'buyer_tax_no' => $this->buyer['tax_number'],
             'buyer_street' => $this->buyer['street'],
             'buyer_post_code' => $this->buyer['post_code'],
