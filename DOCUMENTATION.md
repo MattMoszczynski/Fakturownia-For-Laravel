@@ -56,6 +56,18 @@ $product = new FakturowniaPosition("Product ABC", 1, 10.00);
 $invoice->addPosition($product);
 ```
 
+If we want to specify that buyer is not company - instead of `$invoice->buyer['name']` use `$invoice->buyer['first_name']` and `$invoice->buyer['last_name']`:
+```php
+$invoice = new FakturowniaInvoice();
+
+$invoice->isBuyerCompany = false;
+$invoice->buyer['first_name'] = "First name";
+$invoice->buyer['last_name'] = "Last name";
+
+$product = new FakturowniaPosition("Product ABC", 1, 10.00);
+$invoice->addPosition($product);
+```
+
 <br/>
 
 ### <a id="1-2"></a>Using the constructor
@@ -125,6 +137,17 @@ $price = 10.00;
 
 $product = new FakturowniaPosition($name, $quantity, $price);
 ```
+or with all optional parameters:
+```php
+$name = "Product ABC";
+$quantity = 1;
+$price = 10.00;
+$isNetto = false;
+$tax = 23;
+$gtu_code = 'GTU_02';
+
+$product = new FakturowniaPosition($name, $quantity, $price, $isNetto, $tax, $gtu_code)
+````
 
 <br/>
 
@@ -182,6 +205,25 @@ You can also do that by using the `$tax` variable:
 ```php
 $product = new FakturowniaPosition("Product A", 1, 12.00, true);
 $product->tax = 18;
+```
+
+<br/>
+
+
+### <a id="2-4"></a>Setting GTU Code
+
+In order to set up or change gtu code you can do that by using one of `FakturowniaPosition` constructor optional parameters with default parameters:
+
+```php
+// By default netto and tax set at 23%
+$product = new FakturowniaPosition("Product B", 1, 10.00, false, 23, 'GTU_02');
+```
+
+You can also do that by using the `$gtu_code` variable:
+
+```php
+$product = new FakturowniaPosition("Product A", 1, 12.00, true);
+$product->gtu_code = "GTU_02";
 ```
 
 <br/>
