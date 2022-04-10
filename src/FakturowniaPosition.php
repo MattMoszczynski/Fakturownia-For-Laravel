@@ -9,6 +9,7 @@ class FakturowniaPosition extends FakturowniaDataObject
     private ?int $id = null;
     public string $name = "";
     public string $code = "";
+    public string $gtu_code = "";
     public string $description = "";
 
     public int $quantity = 0;
@@ -18,13 +19,14 @@ class FakturowniaPosition extends FakturowniaDataObject
     public float $price = 0.0;
     public bool $isNetto = false;
 
-    function __construct($name, $quantity, $price, $isNetto = false, $tax = 23)
+    function __construct($name, $quantity, $price, $isNetto = false, $tax = 23, $gtu_code = '')
     {
         $this->name = $name;
         $this->quantity = $quantity;
         $this->price = $price;
         $this->isNetto = $isNetto;
         $this->tax = $tax;
+        $this->gtu_code = $gtu_code;
     }
 
     public function getID()
@@ -50,6 +52,9 @@ class FakturowniaPosition extends FakturowniaDataObject
         if (isset($json['code']) && !empty($json['code'])) {
             $position->code = $json['code'];
         }
+        if (isset($json['gtu_code']) && !empty($json['gtu_code'])) {
+            $position->gtu_code = $json['gtu_code'];
+        }
 
         $position->description = $json['description'];
         $position->quantityUnit = $json['quantity_unit'];
@@ -64,6 +69,7 @@ class FakturowniaPosition extends FakturowniaDataObject
         $data = array(
             'name' => $this->name,
             'code' => $this->code,
+            'gtu_code' => $this->gtu_code,
             'quantity' => $this->quantity,
             'quantity_unit' => $this->quantityUnit,
             'tax' => $this->tax
