@@ -4,6 +4,7 @@ namespace MattM\FFL;
 
 use Illuminate\Support\Facades\Http;
 use MattM\FFL\FakturowniaInvoice;
+use MattM\FFL\Helpers\FakturowniaInvoiceKind;
 
 class Fakturownia
 {
@@ -66,6 +67,31 @@ class Fakturownia
     public static function deleteInvoice(int $id)
     {
         return Http::delete(self::buildUrl() . "invoices/" . $id . ".json?api_token=" . self::$token);
+    }
+
+    public static function copyInvoice(int $id, array $attributes=[])
+    {
+        $data = array();
+        $data['api_token'] = self::$token;
+        $data['invoice'] = [
+            'copy_invoice_from'=>$id,
+            ...$attributes
+        ];
+
+        return Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data);
+    }
+
+    public static function copyProformaToInvoice(int $id, array $attributes=[])
+    {
+        $data = array();
+        $data['api_token'] = self::$token;
+        $data['invoice'] = [
+            'copy_invoice_from'=>$id,
+            'kind'=>FakturowniaInvoiceKind::INVOICE_VAT,
+            ...$attributes
+        ];
+
+        return Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data);
     }
 }
 
