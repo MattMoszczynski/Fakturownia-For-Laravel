@@ -18,6 +18,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
     public string $description = "";
     public string $paymentType = "";
     public string $language = "";
+    public string $currency = "";
 
     public ?string $issueDate = null;
     public ?string $sellDate = null;
@@ -34,7 +35,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
 
     public float $pricePaid = 0.0;
 
-    public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl")
+    public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl", $currency = "PLN")
     {
         $this->number = $number;
         $this->kind = $kind;
@@ -45,6 +46,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
         $this->paymentDate = null;
 
         $this->language = $language;
+        $this->currency = $currency;
 
         $this->seller = array(
             'name' => "",
@@ -200,6 +202,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
             'issue_date' => $this->issueDate,
             'sell_date' => $this->sellDate,
             'lang' => $this->language,
+            'currency' => $this->currency,
             'seller_name' => $this->seller['name'],
             'seller_tax_no' => $this->seller['tax_number'],
             'seller_street' => $this->seller['street'],
