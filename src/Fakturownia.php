@@ -28,17 +28,17 @@ class Fakturownia
         $data['api_token'] = self::$token;
         $data['invoice'] = $invoice->toArray();
 
-        return Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data);
+        return new FakturowniaResponse(Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data));
     }
 
     public static function getInvoice(int $id, string $format = 'json')
     {
-        return Http::get(self::buildUrl() . "invoices/" . $id . "." . $format . "?api_token=" . self::$token);
+        return new FakturowniaResponse(Http::get(self::buildUrl() . "invoices/" . $id . "." . $format . "?api_token=" . self::$token));
     }
 
     public static function changeInvoiceStatus(int $id, string $status)
     {
-        return Http::post(self::buildUrl() . "invoices/" . $id . "/change_status.json?api_token=" . self::$token . "&status=" . $status);
+        return new FakturowniaResponse(Http::post(self::buildUrl() . "invoices/" . $id . "/change_status.json?api_token=" . self::$token . "&status=" . $status));
     }
 
     public static function printInvoiceRaw(int $id)
@@ -61,12 +61,12 @@ class Fakturownia
         $data['api_token'] = self::$token;
         $data['invoice'] = $attributes;
 
-        return Http::accept('application/json')->put(self::buildUrl() . "invoices/" . $id . ".json", $data);
+        return new FakturowniaResponse(Http::accept('application/json')->put(self::buildUrl() . "invoices/" . $id . ".json", $data));
     }
 
     public static function deleteInvoice(int $id)
     {
-        return Http::delete(self::buildUrl() . "invoices/" . $id . ".json?api_token=" . self::$token);
+        return new FakturowniaResponse(Http::delete(self::buildUrl() . "invoices/" . $id . ".json?api_token=" . self::$token));
     }
 
     public static function copyInvoice(int $id, array $attributes=[])
@@ -78,7 +78,7 @@ class Fakturownia
             ...$attributes
         ];
 
-        return Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data);
+        return new FakturowniaResponse(Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data));
     }
 
     public static function copyProformaToInvoice(int $id, array $attributes=[])
@@ -91,7 +91,7 @@ class Fakturownia
             ...$attributes
         ];
 
-        return Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data);
+        return new FakturowniaResponse(Http::accept('application/json')->post(self::buildUrl() . "invoices.json", $data));
     }
 }
 
