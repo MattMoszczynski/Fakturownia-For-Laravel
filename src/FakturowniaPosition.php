@@ -15,7 +15,8 @@ class FakturowniaPosition extends FakturowniaDataObject
     public int $quantity = 0;
     public ?string $quantityUnit = null;
 
-    public int $tax = 0;
+    public string|int $tax = 0;
+    private int $taxValue = 0;
     public float $price = 0.0;
     public bool $isNetto = false;
 
@@ -26,6 +27,10 @@ class FakturowniaPosition extends FakturowniaDataObject
         $this->price = $price;
         $this->isNetto = $isNetto;
         $this->tax = $tax;
+        $this->taxValue = 0;
+        if (is_numeric($this->tax)) {
+            $this->taxValue = $this->tax;
+        }
         $this->gtu_code = $gtu_code;
     }
 
@@ -36,12 +41,12 @@ class FakturowniaPosition extends FakturowniaDataObject
 
     public function getNetPrice()
     {
-        return $this->isNetto ? $this->price : $this->price * 100.0 / (100.0 + $this->tax);
+        return $this->isNetto ? $this->price : $this->price * 100.0 / (100.0 + $this->taxValue);
     }
 
     public function getGrossPrice()
     {
-        return $this->isNetto ? $this->price + ($this->price * $this->tax / 100.0) : $this->price;
+        return $this->isNetto ? $this->price + ($this->price * $this->taxValue / 100.0) : $this->price;
     }
 
     public static function createFromJson($json)
