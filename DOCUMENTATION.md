@@ -1,4 +1,4 @@
-# Documentation (version 1.2)
+# Documentation (version 1.3)
 
 ## Table of Contents
 
@@ -28,6 +28,7 @@
     5. [Deleting target invoice from Fakturownia database](#6-5)
     6. [Printing invoices](#6-6)
     7. [Creating raw print](#6-7)
+    8. [Handling response](#6-8)
 
 ---
 
@@ -75,7 +76,7 @@ $invoice->addPosition($product);
 Normally Fakturownia API automatically generates a number for your new invoice, but if you wish to specify the number, kind of invoice and the language, you pass them as optional parameters in the invoice constructor:
 
 ```php
-$invoice = new FakturowniaInvoice(FakturowniaInvoiceKind::PROFORMA, "FK 123/123/123", "en");
+$invoice = new FakturowniaInvoice(FakturowniaInvoiceKind::PROFORMA, "FK 123/123/123", "en","PLN");
 ```
 
 Or you can just set them by using invoice object variables:
@@ -85,6 +86,11 @@ $invoice = new FakturowniaInvoice();
 $invoice->kind = FakturowniaInvoiceKind::PROFORMA;
 $invoice->number = "FK 123/123/123";
 $invoice->language = "en";
+$invoice->currency = "PLN";
+```
+in case if you need to use other attributes you can use `$invoice->data` array to pass them.
+```php
+$invoice->other['split_payment'] = "1";
 ```
 
 <br/>
@@ -148,6 +154,8 @@ $gtu_code = 'GTU_02';
 
 $product = new FakturowniaPosition($name, $quantity, $price, $isNetto, $tax, $gtu_code)
 ````
+
+you can also use tax as string like "np" or "zw"
 
 <br/>
 
@@ -354,6 +362,7 @@ $invoice = new FakturowniaInvoice();
 Fakturownia::createInvoice($invoice);
 ```
 
+
 <br/>
 
 ### <a id="6-3"></a>Updating specific invoice in Fakturownia
@@ -414,6 +423,22 @@ You're also able to get the raw data for the print by calling static function `p
 
 ```php
 $rawData = Fakturownia::printInvoiceRaw(123456789);
+```
+
+### <a id="6-8"></a> Handling response
+
+Now each request returns a FakturowniaResponse object. You can check if it was successful and added:
+```php 
+$fakturowniaResponse->isSuccess();
+```
+Handle it like this:
+```php
+$fakturowniaResponse = Fakturownia::createInvoice($invoice);
+if(!$fakturowniaResponse->isSuccess()) {
+    Log::error('[Fakturownia ERROR]',json_decode((string)$fakturowniaResponse->getBody(),true));
+    // or do something
+}
+
 ```
 
 ---
