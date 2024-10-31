@@ -18,6 +18,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
     public string $description = "";
     public string $paymentType = "";
     public string $language = "";
+    public string $currency = "";
 
     public ?string $issueDate = null;
     public ?string $sellDate = null;
@@ -33,8 +34,9 @@ class FakturowniaInvoice extends FakturowniaDataObject
     public array $positions = array();
 
     public float $pricePaid = 0.0;
+    public ?array $other = [];
 
-    public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl")
+    public function __construct($kind = FakturowniaInvoiceKind::INVOICE_VAT, $number = "", $language = "pl", $currency = "PLN", $other = [])
     {
         $this->number = $number;
         $this->kind = $kind;
@@ -45,6 +47,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
         $this->paymentDate = null;
 
         $this->language = $language;
+        $this->currency = $currency;
 
         $this->seller = array(
             'name' => "",
@@ -69,6 +72,8 @@ class FakturowniaInvoice extends FakturowniaDataObject
         $this->recipient = null;
 
         $this->positions = array();
+
+        $this->other = $other;
     }
 
     public function setPaymentDeadline(int $days)
@@ -200,6 +205,7 @@ class FakturowniaInvoice extends FakturowniaDataObject
             'issue_date' => $this->issueDate,
             'sell_date' => $this->sellDate,
             'lang' => $this->language,
+            'currency' => $this->currency,
             'seller_name' => $this->seller['name'],
             'seller_tax_no' => $this->seller['tax_number'],
             'seller_street' => $this->seller['street'],
@@ -254,6 +260,8 @@ class FakturowniaInvoice extends FakturowniaDataObject
         }
 
         $data['paid'] = $this->pricePaid;
+
+        $data = array_merge($data, $this->other);
 
         // ----------[ DATA PROCESSING END ]----------
 
